@@ -24,18 +24,24 @@ This is an intelligent chatbot that answers user questions **only** based on the
 
 ```
 
-doc-chatbot/
+ doc-chatbot/
 ├── app/
-│   ├── document\_ingestor.py   # Extracts and embeds documents
-│   ├── retriever.py           # Searches top-k relevant chunks
-│   ├── generator.py           # Generates answer using Cohere
-│   └── utils.py               # Helper functions
-├── sample\_docs/               # Demo documents for testing
-├── app.py                     # CLI interface
-├── web\_ui.py                  # Streamlit Web UI
-├── demo.ipynb                 # Google Colab/Jupyter notebook
-├── requirements.txt
-└── .env                       # Environment variables (Cohere API Key)
+│   ├── document_ingestor.py     # Extracts and embeds documents (PDF, TXT, MD)
+│   ├── retriever.py             # Retrieves top-k relevant chunks using embeddings
+│   ├── generator.py             # Generates answer using Cohere API
+│   └── utils.py                 # (Optional) Shared helper functions
+│
+├── sample_docs/                 # Sample test documents (PDF, TXT) for demo
+│
+├── streamlit_app.py             # Updated Streamlit Web UI (main app)
+├── app.py                       # CLI version to run via terminal
+├── demo.ipynb                   # Jupyter/Colab notebook version (for demos/testing)
+│
+├── requirements.txt             # All Python dependencies
+├── .env                         # Stores COHERE_API_KEY and other secrets
+└── .streamlit/
+    └── config.toml              # Streamlit app config (title, theme, layout)
+
 
 ````
 
