@@ -1,24 +1,26 @@
-# app/retriever.py
-
 import pickle
-import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+VECTOR_STORE_PATH = "app/vector_data.pkl"
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+model = SentenceTransformer(EMBEDDING_MODEL)
 
-# Lazy loading
-docs, sources, index = None, None, None
+def cosine_similarity(a, b):
+    a = np.array(a)
+    b = np.array(b)
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-def load_index():
-    global docs, sources, index
-    if docs is None or sources is None or index is None:
-        with open("app/vector_data.pkl", "rb") as f:
-            docs, sources, _ = pickle.load(f)
-        index = faiss.read_index("app/faiss_index.index")
+def retrieve(query: str, top_k: int = 3):
+    with open(VECTOR_STORE_PATH, "rb") as f:
+        embeddings = pickle.load(f)
 
-def retrieve(query, k=3):
-    load_index()
-    query_vec = model.encode([query])
-    D, I = index.search(np.array(query_vec), k)
-    return [(docs[i], sources[i]) for i in I[0]]
+    query_embedding = model.encode(query)
+
+    scores = []
+    for emb, doc in embeddings:
+        sim = cosine_similarity(query_embedding, emb)
+        scores.append((sim, doc))
+
+    top_chunks = sorted(scores, key=lambda x: x[0], reverse=True)[:top_k]
+    return [doc for _, doc in top_chunks]
