@@ -1,0 +1,1 @@
+The chatbot handles errors gracefully. If the retrieval phase fails to find relevant chunks, the system responds with "I don’t know." Similarly, if the generation step times out or fails, the system returns an error message and logs the issue for debugging. The architecture ensures modularity and resilience by separating ingestion, retrieval, and generation phases.
